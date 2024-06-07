@@ -21,8 +21,6 @@ def get_start_command(message):
 
 
 ################ DIALOG MESSAGES ################
-
-
 @IG_bot.message_handler(content_types=["text"])
 def get_messages_text(message):
     user_text = message.text
