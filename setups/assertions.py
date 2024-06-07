@@ -3,8 +3,8 @@ import jsonschema
 from pathlib import Path
 from typing import Dict
 
-from setup import basemodel_Imitation_Game
-from setup.setup import JSON_SCHEMA_PATH
+from setups import basemodel_Imitation_Game
+from setups.setup import JSON_SCHEMA_PATH
 
 
 def assert_valid_markup_ct_general(markup: Dict):
@@ -38,4 +38,4 @@ def get_markup_scheme() -> Dict[str, Path]:
 
 
 if __name__ == "__main__":
-    test_user = basemodel_Imitation_Game.Player(id=0, username="test_user")
+    test_user = basemodel_Imitation_Game.Player(userid=0, username="test_user")

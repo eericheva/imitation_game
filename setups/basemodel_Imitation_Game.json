@@ -4,17 +4,42 @@
     "title": "ImitationGame",
     "type": "object",
     "definitions": {
+        "Game": {
+            "type": "object",
+            "properties": {
+                "playerA": {
+                    "$ref": "#/definitions/Player"
+                },
+                "playerB": {
+                    "$ref": "#/definitions/Player"
+                },
+                "playerC": {
+                    "$ref": "#/definitions/Player"
+                },
+                "game_chat_id": {
+                    "type": "integer",
+                    "default": null
+                },
+                "last_call": {
+                    "type": "object",
+                    "default": null
+                }
+            }
+        },
         "Player": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer"
+                "userid": {
+                    "type": "integer",
+                    "default": null
                 },
                 "username": {
-                    "type": "string"
+                    "type": "string",
+                    "default": "null"
                 },
                 "last_message": {
-                    "type": "string"
+                    "type": "string",
+                    "default": "null"
                 },
                 "user_history": {
                     "type": "array",
@@ -23,6 +48,10 @@
                     "items": {
                         "type": "string"
                     }
+                },
+                "model": {
+                    "type": "object",
+                    "default": null
                 }
             }
         },
@@ -43,8 +72,8 @@
         "VoiceItItems": {
             "type": "string",
             "enum": [
-                "voiceit_item_yes",
-                "voiceit_item_no"
+                "voice_c_yes",
+                "voice_b_yes"
             ]
         },
         "GameStartItems": {
@@ -65,6 +94,9 @@
     "properties": {
         "player": {
             "$ref": "#/definitions/Player"
+        },
+        "game": {
+            "$ref": "#/definitions/Game"
         }
     },
     "additionalProperties": false

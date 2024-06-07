@@ -1,7 +1,7 @@
 import telebot
 
-from setup import basemodel_Imitation_Game
-from setup.setup import CURRENT_USER_ID, IG_bot
+from setups import basemodel_Imitation_Game
+from setups.setup import CURRENT_USER_ID, IG_bot
 from telegram_bot_messages.telegram_bot_answers import ask_voiceit
 
 
@@ -59,5 +59,7 @@ def send_decision(message, text_input):
         text="********************* \n I an ready make a decision \n *********************",
     )
     IG_bot.send_message(chat_id=CURRENT_USER_ID(message), text=text_input)
-    ask_voiceit(CURRENT_USER_ID(message))
+    ask_voiceit(
+        CURRENT_USER_ID(message), basemodel_Imitation_Game.Prefixes.PlayerC.value
+    )
     ask_start_game(message)
