@@ -2,28 +2,25 @@ import os
 
 import telebot
 
-from game_loop.game import Game
-import basemodel_Imitation_Game
+from setups import basemodel_Imitation_Game
 
 ############ TOKENS ############
-if not os.path.isfile("telegram_bot_token.py"):
+if not os.path.exists("setups/telegram_bot_token.py"):
     TOKEN = os.environ.get("TOKEN")
 else:
-    from telegram_bot_token import TOKEN
+    from setups.telegram_bot_token import TOKEN
 
 ############ Elements ############
 IG_bot = telebot.TeleBot(TOKEN)
 IG_bot.remove_webhook()
 
-game = Game()
-
 ############ BASEMODEL and Pathes ############
 this_project_path = os.getcwd()
 JSON_SCHEMA_PATH = os.path.join(
-    this_project_path, "setup/basemodel_Imitation_Game.json"
+    this_project_path, "setups/basemodel_Imitation_Game.json"
 )
 json_datamodel_path = os.path.join(
-    this_project_path, "setup/basemodel_Imitation_Game.py"
+    this_project_path, "setups/basemodel_Imitation_Game.py"
 )
 
 if not os.path.isfile(json_datamodel_path):

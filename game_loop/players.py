@@ -1,17 +1,16 @@
 import json
 import random
 
-from setup.basemodel_Imitation_Game import Player, Prefixes
-from setup.setup import CURRENT_USER_ID_NAME, MESSAGE_WRAPPER
+from setups.basemodel_Imitation_Game import Player, Prefixes
+from setups.setup import CURRENT_USER_ID_NAME, MESSAGE_WRAPPER
 
 
 # NEW USER
 class GamePlayer(Player):
-    def __init__(self, id=222, username=Prefixes.PlayerA.value, is_ai=False):
-        super(GamePlayer).__init__()
-        self.id = id
+    def __init__(self, userid=222, username=Prefixes.PlayerA.value):
+        super().__init__()
+        self.userid = userid
         self.username = username
-        self.is_ai = is_ai
 
         self.last_message = None
         self.user_history = self._create_new_history()
@@ -22,16 +21,16 @@ class GamePlayer(Player):
     def _dump_user(self):
         new_user = {
             "user": {
-                "id": self.id,
+                "id": self.userid,
                 "username": self.username,
                 "user_history": self.user_history,
                 "last_message": self.last_message,
             }
         }
-        json.dump(new_user, open(CURRENT_USER_ID_NAME(self.id, self.username), "w"))
+        json.dump(new_user, open(CURRENT_USER_ID_NAME(self.userid, self.username), "w"))
 
-    def setup_player(self, id, username):
-        self.id = id
+    def setup_player(self, userid, username):
+        self.userid = userid
         self.username = username
         self._dump_user()
 
@@ -43,11 +42,10 @@ class GamePlayer(Player):
 
 # singleton Player B
 class GamePlayerB(GamePlayer):
-    def __init__(self, id=111, username=Prefixes.PlayerB.value, is_ai=True):
-        super(GamePlayerB).__init__(id, username)
-        self.id = id
+    def __init__(self, userid=111, username=Prefixes.PlayerB.value):
+        super(GamePlayerB, self).__init__(userid, username)
+        self.userid = userid
         self.username = username
-        self.is_ai = is_ai
 
         self.model = None
 
@@ -61,11 +59,10 @@ class GamePlayerB(GamePlayer):
 
 # singleton Player C
 class GamePlayerC(GamePlayer):
-    def __init__(self, id=000, username=Prefixes.PlayerC.value, is_ai=True):
-        super(GamePlayerC).__init__(id, username)
-        self.id = id
+    def __init__(self, userid=000, username=Prefixes.PlayerC.value):
+        super(GamePlayerC, self).__init__(userid, username)
+        self.userid = userid
         self.username = username
-        self.is_ai = is_ai
 
         self.model = None
 
@@ -76,9 +73,9 @@ class GamePlayerC(GamePlayer):
         question = "First question?"
         self.update_last_message(question)
 
-    def try2decide(self, playerA_history, playerB_history):
+    def try2decide(self, player_a_history, player_b_history):
         text_decision = "i'm a human"
-        is_there_decision = random.choice([False] * 10 + [False])
+        is_there_decision = random.choice([False] * 4 + [True])
         if is_there_decision:
             self.update_last_message(text_decision)
         return is_there_decision
