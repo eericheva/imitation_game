@@ -1,0 +1,58 @@
+# This workflow will allows you to push docker image to registry ghcr.io
+# and deploy on remote server from it through docker compose
+name: Deploy Docker
+
+on:
+  #  push:
+  #    branches: [ "main" ]
+  #  pull_request:
+  #    branches: [ "main" ]
+  workflow_dispatch
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.actor }}/daily_serbian_image:latest
+
+jobs:
+  publish:
+    name: Build and Publish Image to ghcr.io
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to ghcr.io
+        run: |
+          echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Build Image and Publish to ghcr.io
+        run: |
+          docker build . --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+  deploy:
+    needs: publish
+    name: Deploy Image with Docker Compose
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install SSH Keys 0
+        # check this thread to understand why its needed: <https://stackoverflow.com/a/70447517>
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+      - name: Install SSH Keys 1
+        run: |
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+      - name: Connect to remote server 0
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'ENDSSH'
+          echo "This is first connect"
+          ENDSSH
+      - name: Connect to remote server and Pull Image from registry
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'ENDSSH'
+          cd ${{ secrets.WORK_DIR }} && docker compose pull && docker compose up -d
+          ENDSSH
+      - name: cleanup
+        run: rm -rf ~/.ssh

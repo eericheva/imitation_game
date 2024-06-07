@@ -1,0 +1,71 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "version": "0.0.1",
+    "title": "ImitationGame",
+    "type": "object",
+    "definitions": {
+        "Player": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "last_message": {
+                    "type": "string"
+                },
+                "user_history": {
+                    "type": "array",
+                    "min_items": 1,
+                    "max_items": 3,
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "Prefixes": {
+            "type": "string",
+            "enum": [
+                "PlayerA",
+                "PlayerB",
+                "PlayerC"
+            ]
+        },
+        "MessageWrapper": {
+            "type": "string",
+            "enum": [
+                "says"
+            ]
+        },
+        "VoiceItItems": {
+            "type": "string",
+            "enum": [
+                "voiceit_item_yes",
+                "voiceit_item_no"
+            ]
+        },
+        "GameStartItems": {
+            "type": "string",
+            "enum": [
+                "start_game",
+                "stop_game"
+            ]
+        },
+        "BaseCommand": {
+            "type": "string",
+            "enum": [
+                "start",
+                "help"
+            ]
+        }
+    },
+    "properties": {
+        "player": {
+            "$ref": "#/definitions/Player"
+        }
+    },
+    "additionalProperties": false
+}
