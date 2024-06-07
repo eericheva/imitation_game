@@ -1,7 +1,7 @@
 import telebot
 
-from setups import basemodel_Imitation_Game
-from setups.setup import IG_bot, MESSAGE_WRAPPER
+from main_setups import basemodel_Imitation_Game
+from main_setups.setup import IG_bot, MESSAGE_WRAPPER
 from speech_tools.speech_tools import text2speech_me
 
 

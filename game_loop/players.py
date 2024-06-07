@@ -1,8 +1,8 @@
 import json
 import random
 
-from setups.basemodel_Imitation_Game import Player, Prefixes
-from setups.setup import CURRENT_USER_ID_NAME, MESSAGE_WRAPPER
+from main_setups.basemodel_Imitation_Game import Player, Prefixes
+from main_setups.setup import CURRENT_USER_ID_NAME, MESSAGE_WRAPPER
 
 
 # NEW USER
