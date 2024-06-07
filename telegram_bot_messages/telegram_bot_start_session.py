@@ -1,7 +1,7 @@
 import telebot
 
-from setups import basemodel_Imitation_Game
-from setups.setup import CURRENT_USER_ID, IG_bot
+from main_setups import basemodel_Imitation_Game
+from main_setups.setup import CURRENT_USER_ID, IG_bot
 from telegram_bot_messages.telegram_bot_answers import ask_voiceit
 
 

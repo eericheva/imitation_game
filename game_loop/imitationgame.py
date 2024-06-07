@@ -1,7 +1,7 @@
 from game_loop.players import GamePlayer, GamePlayerB, GamePlayerC
-from setups.setup import CURRENT_USER_ID, CURRENT_USER_USERNAME
+from main_setups.setup import CURRENT_USER_ID, CURRENT_USER_USERNAME
 from telegram_bot_messages import telegram_bot_answers, telegram_bot_start_session
-from setups.basemodel_Imitation_Game import Game
+from main_setups.basemodel_Imitation_Game import Game
 
 
 class ImitationGame(Game):

@@ -1,8 +1,8 @@
 # coding=utf-8
 
 from game_loop.imitationgame import ImitationGame
-from setups import basemodel_Imitation_Game
-from setups.setup import CURRENT_USER_ID, IG_bot, MESSAGE_WRAPPER
+from main_setups import basemodel_Imitation_Game
+from main_setups.setup import CURRENT_USER_ID, IG_bot, MESSAGE_WRAPPER
 from speech_tools import speech_tools
 from telegram_bot_messages import telegram_bot_answers, telegram_bot_start_session
 
