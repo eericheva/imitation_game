@@ -1,18 +1,55 @@
+import logging
 import os
+import sys
 
 import telebot
+from huggingface_hub import snapshot_download
 
 from main_setups import basemodel_Imitation_Game
+
+########### LOGER ###########
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    fmt="**************** \n "
+    "%(asctime)s - %(levelname)s - %(message)s \n"
+    "****************",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+handler.setFormatter(formatter)
+logger = logging.getLogger("imitation-game")
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
+logger.propagate = False  # to avoid doubling in logger output
 
 ############ TOKENS ############
 if not os.path.exists("main_setups/telegram_bot_token.py"):
     TOKEN = os.environ.get("TOKEN")
+    HUGGINGFACE_TOKEN = os.environ.get("HUGGINGFACE_TOKEN")
 else:
-    from main_setups.telegram_bot_token import TOKEN
+    from main_setups.telegram_bot_token import TOKEN, HUGGINGFACE_TOKEN
 
 ############ Elements ############
+TOKEN = TOKEN
+HUGGINGFACE_TOKEN = HUGGINGFACE_TOKEN
+
 IG_bot = telebot.TeleBot(TOKEN)
 IG_bot.remove_webhook()
+# PLAYER_B_MODEL_ID = "Qwen/Qwen2-7B-Instruct-GPTQ-Int8"
+# PLAYER_C_MODEL_ID = "Qwen/Qwen2-7B-Instruct-GPTQ-Int8"
+# PLAYER_B_MODEL_ID = "Qwen/Qwen2-7B-Instruct"
+# PLAYER_C_MODEL_ID = "Qwen/Qwen2-7B-Instruct"
+# PLAYER_B_MODEL_ID = "meta-llama/Meta-Llama-3-8B-Instruct"
+# PLAYER_C_MODEL_ID = "meta-llama/Meta-Llama-3-8B-Instruct"
+PLAYER_B_MODEL_ID = (
+    "second-state/Llama-3-8B-Instruct-GGUF/Meta-Llama-3-8B-Instruct-Q4_K_M.gguf"
+)
+PLAYER_C_MODEL_ID = (
+    "second-state/Llama-3-8B-Instruct-GGUF/Meta-Llama-3-8B-Instruct-Q4_K_M.gguf"
+)
+# PLAYER_B_MODEL_ID = "HuggingFaceH4/zephyr-7b-beta"
+# PLAYER_C_MODEL_ID = "HuggingFaceH4/zephyr-7b-beta"
+
 
 ############ BASEMODEL and Pathes ############
 this_project_path = os.getcwd()
@@ -28,12 +65,31 @@ if not os.path.isfile(json_datamodel_path):
         f"datamodel-codegen  --input {JSON_SCHEMA_PATH} "
         f"--input-file-type jsonschema "
         f"--output {json_datamodel_path}  "
-        f"--target-python-version 3.8 --use-default"
+        f"--target-python-version 3.11.5 --use-default"
     )
 
 DATA_PATH = os.path.join(this_project_path, "data")
 if not os.path.isdir(DATA_PATH):
     os.makedirs(DATA_PATH)
+
+# download models from huggingface_hub locally
+if not os.path.exists(os.path.join(DATA_PATH, PLAYER_B_MODEL_ID)):
+    logger.info(f"loading {PLAYER_B_MODEL_ID}")
+    snapshot_download(
+        repo_id=PLAYER_B_MODEL_ID,
+        local_dir=os.path.join(DATA_PATH, PLAYER_B_MODEL_ID),
+        local_dir_use_symlinks=True,
+        token=HUGGINGFACE_TOKEN,
+        # force_download = True
+    )
+if not os.path.exists(os.path.join(DATA_PATH, PLAYER_C_MODEL_ID)):
+    logger.info(f"loading {PLAYER_C_MODEL_ID}")
+    snapshot_download(
+        repo_id=PLAYER_C_MODEL_ID,
+        local_dir=os.path.join(DATA_PATH, PLAYER_C_MODEL_ID),
+        local_dir_use_symlinks=True,
+        token=HUGGINGFACE_TOKEN,
+    )
 
 ############ GLOBAL VARIABLES ############
 
@@ -54,5 +110,4 @@ MESSAGE_WRAPPER = (
     lambda username: f"{username} {basemodel_Imitation_Game.MessageWrapper.says.value} : "
 )
 
-# dailySerbian_updater = Updater(TOKEN, use_context=True)
-# dailySerbian_dispatcher = dailySerbian_updater.dispatcher
+logger.info(f"SETUP FINISHED")

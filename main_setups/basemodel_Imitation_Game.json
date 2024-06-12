@@ -23,6 +23,13 @@
                 "last_call": {
                     "type": "object",
                     "default": null
+                },
+                "game_status": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "game_mode": {
+                    "$ref": "#/definitions/GameMode"
                 }
             }
         },
@@ -49,11 +56,32 @@
                         "type": "string"
                     }
                 },
+                "game_chat_id": {
+                    "type": "integer",
+                    "default": null
+                },
                 "model": {
                     "type": "object",
                     "default": null
                 }
             }
+        },
+        "ChatIndicators": {
+            "type": "string",
+            "enum": [
+                "Question",
+                "Answer",
+                "Reasoning",
+                "Decision",
+                "Confidence Metric"
+            ]
+        },
+        "GameMode": {
+            "type": "string",
+            "enum": [
+                "blind",
+                "full"
+            ]
         },
         "Prefixes": {
             "type": "string",

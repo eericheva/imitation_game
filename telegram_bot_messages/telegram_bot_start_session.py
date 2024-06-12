@@ -46,6 +46,33 @@ def start_game_message(message):
     )
 
 
+def ask_game_mode(call):
+    item_yes = telebot.types.InlineKeyboardButton(
+        text="Blind",
+        callback_data=basemodel_Imitation_Game.GameMode.blind.value,
+    )
+    item_no = telebot.types.InlineKeyboardButton(
+        text="Explanatory",
+        callback_data=basemodel_Imitation_Game.GameMode.full.value,
+    )
+    markup = telebot.types.InlineKeyboardMarkup().add(item_yes, item_no)
+    IG_bot.send_message(
+        CURRENT_USER_ID(call),
+        """
+                In which mode will we play?
+
+        **Blind** means - Player A (you) cannot see Player B's answers or Player C's reasoning about how they make
+        decisions
+        after each answer.
+
+        **Explanatory** means - before Player A is given the opportunity to answer, they will see Player B's
+        response. After
+        each series of questions and answers, Player C's reasoning for making their decision will be shown.
+                """,
+        reply_markup=markup,
+    )
+
+
 def stop_game_message(message):
     IG_bot.send_message(
         CURRENT_USER_ID(message),

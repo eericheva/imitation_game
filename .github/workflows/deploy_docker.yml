@@ -12,7 +12,7 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.actor }}/daily_serbian_image:latest
+  IMAGE_NAME: ${{ github.actor }}/imitation_game_image:latest
 
 jobs:
   publish:

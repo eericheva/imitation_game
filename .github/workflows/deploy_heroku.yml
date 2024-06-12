@@ -1,5 +1,7 @@
 # This workflow will allows you to deploy to Heroku
 # https://github.com/marketplace/actions/deploy-to-heroku
+# Procfile - start point
+# runtime.txt - python version to run
 
 name: Deploy Heroku
 
@@ -23,6 +25,6 @@ jobs:
           heroku_email: "epifana89@gmail.com"
           buildpack: "heroku/python" # "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
           branch: "main"
-#          healthcheck: "https://daily-serbian.herokuapp.com/health"
+        #          healthcheck: "https://imitation-game.herokuapp.com/health"
         env:
           HD_TOKEN: ${{secrets.TELEGRAM_TOKEN}}

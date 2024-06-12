@@ -23,21 +23,27 @@ def get_start_command(message):
 ################ DIALOG MESSAGES ################
 @IG_bot.message_handler(content_types=["text"])
 def get_messages_text(message):
-    user_text = message.text
-    game.proceed_user_message(message, user_text)
+    if game.game_status:
+        user_text = message.text
+        game.proceed_user_message(message, user_text)
+    else:
+        telegram_bot_start_session.start_me(message)
 
 
 @IG_bot.message_handler(content_types=["audio", "voice"])
 def get_messages_voice(message):
-    if message.voice.duration > 30:
-        IG_bot.send_message(
-            CURRENT_USER_ID(message), "NOT PROCEEDED: message is to long!"
-        )
-        return None
-    file_info = IG_bot.get_file(message.voice.file_id)
-    file_path = IG_bot.download_file(file_info.file_path)
-    user_text = speech_tools.speech2text_me(file_path)
-    game.proceed_user_message(message, user_text)
+    if game.game_status:
+        if message.voice.duration > 30:
+            IG_bot.send_message(
+                CURRENT_USER_ID(message), "NOT PROCEEDED: message is to long!"
+            )
+            return None
+        file_info = IG_bot.get_file(message.voice.file_id)
+        file_path = IG_bot.download_file(file_info.file_path)
+        user_text = speech_tools.speech2text_me(file_path)
+        game.proceed_user_message(message, user_text)
+    else:
+        telegram_bot_start_session.start_me(message)
 
 
 ################ BUTTONS CHECK ################
@@ -52,6 +58,7 @@ def get_messages_voice(message):
 )
 def check_button_ask_start_game(call):
     if call.data in [basemodel_Imitation_Game.GameStartItems.start_game.value]:
+        game = ImitationGame()
         game.start_game(call)
     if call.data in [basemodel_Imitation_Game.GameStartItems.stop_game.value]:
         telegram_bot_start_session.stop_game_message(call)
@@ -79,6 +86,21 @@ def check_button_voiceit(call):
         telegram_bot_answers.voice_message(
             CURRENT_USER_ID(call), game.playerB.last_message
         )
+
+
+@IG_bot.callback_query_handler(
+    func=lambda call: call.data
+    in [
+        basemodel_Imitation_Game.GameMode.blind.value,
+        basemodel_Imitation_Game.GameMode.full.value,
+    ]
+)
+def check_button_ask_game_mode(call):
+    telegram_bot_answers.send_message(
+        CURRENT_USER_ID(call),
+        f"We'll play {call.data} mode. I'm forming a question. Wait a min.",
+    )
+    game.game_mode = call.data
 
 
 IG_bot.infinity_polling(timeout=20, long_polling_timeout=20)
