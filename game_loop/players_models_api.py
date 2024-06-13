@@ -40,7 +40,7 @@ class InferenceAPIRequestModel:
         API_URL = f"https://api-inference.huggingface.co/models/{self.model_id}"
         response = requests.post(API_URL, headers=headers, json=payload)
         while response.status_code == 503:
-            telegram_bot_answers.send_message(
+            telegram_bot_answers.message_send(
                 self.game_chat_id,
                 f"Please, wait! I am waking up right now. Estimated Time: "
                 f"{response.json().get('estimated_time')}",
@@ -48,7 +48,7 @@ class InferenceAPIRequestModel:
             # time.sleep(response.json().get('estimated_time'))
             response = requests.post(API_URL, headers=headers, json=payload)
             if response.status_code == 200:
-                telegram_bot_answers.send_message(
+                telegram_bot_answers.message_send(
                     self.game_chat_id, "i'm here, let's continue!"
                 )
                 response = (

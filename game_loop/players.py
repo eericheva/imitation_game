@@ -1,7 +1,6 @@
 import json
 import re
 
-from game_loop.players_models_llamacpp import TransformersModelLLamaCPP
 from game_loop.players_prompts_hf import (
     prompt_answer_player_b,
     prompt_base_full_desicion_player_c,
@@ -19,7 +18,6 @@ from main_setups.setup import (
     CURRENT_USER_ID_NAME,
     logger,
     MESSAGE_WRAPPER,
-    PLAYER_C_MODEL_ID,
 )
 
 
@@ -47,14 +45,13 @@ class GamePlayer(basemodel_Imitation_Game.Player):
         }
         json.dump(new_user, open(CURRENT_USER_ID_NAME(222, self.username), "w"))
 
-    def setup_player(self, game_chat_id):
+    def setup_player(self, game_chat_id, model=None):
         self.model = None
-        # self._dump_user()
+        # self._dump_user
 
     def update_last_message(self, text_input):
         self.last_message = f"{MESSAGE_WRAPPER(self.username)} \n {text_input}"
         self.user_history.append(self.last_message)
-        # self._dump_user()
 
 
 # singleton Player B
@@ -63,21 +60,21 @@ class GamePlayerB(GamePlayer):
         super(GamePlayerB, self).__init__(username)
         self.username = username
         self.model = None
+        self.game_type = None
 
-    def setup_player(self, game_chat_id):
-        self.model = TransformersModelLLamaCPP(
-            model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id
-        )
-        # self.model = TransformersModelWOQ(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
-        # self.model = InferenceClientModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
-        # self.model = InferenceAPIModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
-        # self.model = InferenceAPIRequestModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
+    def setup_player(self, game_chat_id, model=None):
+        self.model = model
+
+    def setup_game_type(self, game_type):
+        self.game_type = game_type
 
     def form_answer(self, text_input):
         prompt_base = prompt_base_player_b()
+        if self.game_type == basemodel_Imitation_Game.GameType.direct.value:
+            prompt_base = prompt_base_player_b()
         prompt = prompt_answer_player_b(text_input)
         answer = self.model.query(prompt, prompt_base)
-        logger.info(prompt_base + "\n" + prompt + "\n" + answer)
+        logger.info(prompt + "\n" + answer)
         self.update_last_message(answer)
 
 
@@ -88,15 +85,8 @@ class GamePlayerC(GamePlayer):
         self.username = username
         self.model = None
 
-    def setup_player(self, game_chat_id):
-        self.model = TransformersModelLLamaCPP(
-            model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id
-        )
-        # self.model = TransformersModelWOQ(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
-        # self.model = TransformersModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
-        # self.model = InferenceClientModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
-        # self.model = InferenceAPIModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
-        # self.model = InferenceAPIRequestModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
+    def setup_player(self, game_chat_id, model=None):
+        self.model = model
 
     def form_question(self, player_a, player_b):
         prompt_base = prompt_base_question_player_c(
@@ -104,16 +94,17 @@ class GamePlayerC(GamePlayer):
         )
         prompt = prompt_question_player_c(dificulty="easy")
         question = self.model.query(prompt, prompt_base)
-        logger.info(prompt_base + "\n" + prompt + "\n" + question)
+        logger.info(prompt + "\n" + question)
         self.update_last_message(question)
 
     def try2decide(self, player_a, player_b):
+        logger.info("try2decide")
         prompt_base = prompt_base_full_desicion_player_c(
             player_a.username, player_b.username
         )
         prompt = prompt_full_desicion_player_c(player_a, player_b, self)
         text_decision = self.model.query(prompt, prompt_base)
-        logger.info(prompt_base + "\n" + prompt + "\n" + text_decision)
+        logger.info(prompt + "\n" + text_decision)
         reasoning = self.try_get_reasoning(
             text_decision, player_a.username, player_b.username
         )
@@ -124,31 +115,48 @@ class GamePlayerC(GamePlayer):
             text_decision, player_a.username, player_b.username
         )
         text_decision = self.form_full_decision_text(reasoning, decision, confidence)
-        is_there_decision = True if confidence > 80 else False
+        is_there_decision = True if confidence > 79 else False
         if is_there_decision:
             self.update_last_message(text_decision)
         return is_there_decision, text_decision
 
     def try_get_confidence(self, text_decision, player_a_username, player_b_username):
+        def _this():
+            logger.info("try_get_confidence")
+            prompt_base = prompt_base_try_get_confidence_player_c(
+                player_a_username, player_b_username
+            )
+            prompt = prompt_try_get_confidence_player_c(text_decision)
+            new_text_decision = self.model.query(prompt, prompt_base)
+            logger.info(prompt + "\n" + new_text_decision)
+            return new_text_decision
+
         new_text_decision = text_decision
         confidence_metric = (
             basemodel_Imitation_Game.ChatIndicators.Confidence_Metric.value
         )
-        confidence = 0
+        confidence_metric_l = [
+            confidence_metric,
+            confidence_metric.lower(),
+            "".join(confidence_metric.split(" ")),
+            "".join(confidence_metric.lower().split(" ")),
+        ]
         for i in range(3):
-            try_get_confidence = new_text_decision.split(confidence_metric)
-            if len(try_get_confidence) > 1:
-                try_get_confidence = re.findall(r"[0-9]+", try_get_confidence[-1])[0]
-                confidence = int(try_get_confidence)
-                break
-            else:
-                prompt_base = prompt_base_try_get_confidence_player_c(
-                    player_a_username, player_b_username
-                )
-                prompt = prompt_try_get_confidence_player_c(text_decision)
-                new_text_decision = self.model.query(prompt, prompt_base)
-                logger.info(prompt_base + "\n" + prompt + "\n" + new_text_decision)
-        return confidence
+            for confidence_metric in confidence_metric_l:
+                try_get_confidence = new_text_decision.split(confidence_metric)
+                if len(try_get_confidence) > 1:
+                    try:
+                        try_get_confidence = re.findall(
+                            r"[0-9]+", try_get_confidence[-1]
+                        )[0]
+                        confidence = int(try_get_confidence)
+                        return confidence
+                    except:
+                        if any(cna in try_get_confidence for cna in ["N/A", "n/a"]):
+                            return 50
+                        break
+            new_text_decision = _this()
+        return 0
 
     def try_get_decision(self, text_decision, player_a_username, player_b_username):
         new_text_decision = text_decision
@@ -165,12 +173,13 @@ class GamePlayerC(GamePlayer):
                 to_return += try_get_decision.strip()
                 break
             else:
+                logger.info("try_get_decision")
                 prompt_base = prompt_base_try_get_decision_player_c(
                     player_a_username, player_b_username
                 )
                 prompt = prompt_try_get_decision_player_c(text_decision)
                 new_text_decision = self.model.query(prompt, prompt_base)
-                logger.info(prompt_base + "\n" + prompt + "\n" + new_text_decision)
+                logger.info(prompt + "\n" + new_text_decision)
         return to_return.strip()
 
     def try_get_reasoning(self, text_decision, player_a_username, player_b_username):
@@ -181,21 +190,15 @@ class GamePlayerC(GamePlayer):
             basemodel_Imitation_Game.ChatIndicators.Confidence_Metric.value
         )
         to_return = f"{reasoning} : "
-        for i in range(3):
-            try_get_reasoning = new_text_decision.split(reasoning)
-            if len(try_get_reasoning) > 1:
-                try_get_reasoning = try_get_reasoning[-1]
-                try_get_reasoning = try_get_reasoning.split(decision)[0]
-                try_get_reasoning = try_get_reasoning.split(confidence_metric)[0]
-                to_return += try_get_reasoning.strip()
-                break
-            else:
-                to_return += new_text_decision
-                break
-                # prompt_base = prompt_base_try_get_decision_player_c(player_a_username, player_b_username)
-                # prompt = prompt_try_get_decision_player_c(text_decision)
-                # new_text_decision = self.model.query(prompt, prompt_base)
-                # logger.info(prompt_base + "\n" + prompt + "\n" + new_text_decision)
+        try_get_reasoning = new_text_decision.split(reasoning)
+        if len(try_get_reasoning) > 1:
+            try_get_reasoning = try_get_reasoning[-1]
+            try_get_reasoning = try_get_reasoning.split(decision)[0]
+            try_get_reasoning = try_get_reasoning.split(confidence_metric)[0]
+            to_return += try_get_reasoning.strip()
+        else:
+            logger.info("try_get_reasoning")
+            to_return += new_text_decision
         return to_return.strip()
 
     def form_full_decision_text(self, reasoning, decision, confidence):

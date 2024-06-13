@@ -9,7 +9,7 @@ from telegram_bot_messages import telegram_bot_answers
 
 class TransformersModel:
     def __init__(self, model_id, game_chat_id):
-        telegram_bot_answers.send_message(
+        telegram_bot_answers.message_send(
             game_chat_id, f"Please, wait! I am waking up right now."
         )
         model_path = os.path.join(DATA_PATH, model_id)
@@ -23,7 +23,7 @@ class TransformersModel:
             device_map="auto",
             token=HUGGINGFACE_TOKEN,
         )
-        telegram_bot_answers.send_message(game_chat_id, "i'm here, let's continue!")
+        telegram_bot_answers.message_send(game_chat_id, "i'm here, let's continue!")
 
     def query(self, input_text, base_text):
         messages = [

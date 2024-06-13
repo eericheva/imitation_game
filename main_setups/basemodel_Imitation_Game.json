@@ -30,16 +30,19 @@
                 },
                 "game_mode": {
                     "$ref": "#/definitions/GameMode"
+                },
+                "game_type": {
+                    "$ref": "#/definitions/GameType"
+                },
+                "model": {
+                    "type": "object",
+                    "default": null
                 }
             }
         },
         "Player": {
             "type": "object",
             "properties": {
-                "userid": {
-                    "type": "integer",
-                    "default": null
-                },
                 "username": {
                     "type": "string",
                     "default": "null"
@@ -63,6 +66,9 @@
                 "model": {
                     "type": "object",
                     "default": null
+                },
+                "game_type": {
+                    "$ref": "#/definitions/GameType"
                 }
             }
         },
@@ -81,6 +87,13 @@
             "enum": [
                 "blind",
                 "full"
+            ]
+        },
+        "GameType": {
+            "type": "string",
+            "enum": [
+                "direct",
+                "inverse"
             ]
         },
         "Prefixes": {

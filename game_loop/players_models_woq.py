@@ -10,7 +10,7 @@ from telegram_bot_messages import telegram_bot_answers
 
 class TransformersModelWOQ:
     def __init__(self, model_id, game_chat_id):
-        telegram_bot_answers.send_message(
+        telegram_bot_answers.message_send(
             game_chat_id, f"Please, wait! I am waking up right now."
         )
         model_woq_path = os.path.join(DATA_PATH, model_id + "-WOQ.pt")
@@ -51,7 +51,7 @@ class TransformersModelWOQ:
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_woq_path, from_tf=False
             )
-        telegram_bot_answers.send_message(game_chat_id, "i'm here, let's continue!")
+        telegram_bot_answers.message_send(game_chat_id, "i'm here, let's continue!")
 
     def query(self, input_text, base_text):
         messages = [

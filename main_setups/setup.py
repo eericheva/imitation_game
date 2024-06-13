@@ -1,9 +1,11 @@
 import logging
 import os
 import sys
+import time
 
 import telebot
 from huggingface_hub import snapshot_download
+from telebot.async_telebot import AsyncTeleBot
 
 from main_setups import basemodel_Imitation_Game
 
@@ -33,8 +35,9 @@ else:
 TOKEN = TOKEN
 HUGGINGFACE_TOKEN = HUGGINGFACE_TOKEN
 
-IG_bot = telebot.TeleBot(TOKEN)
-IG_bot.remove_webhook()
+IG_bot = AsyncTeleBot(TOKEN)
+# IG_bot.remove_webhook()
+
 # PLAYER_B_MODEL_ID = "Qwen/Qwen2-7B-Instruct-GPTQ-Int8"
 # PLAYER_C_MODEL_ID = "Qwen/Qwen2-7B-Instruct-GPTQ-Int8"
 # PLAYER_B_MODEL_ID = "Qwen/Qwen2-7B-Instruct"
@@ -49,6 +52,23 @@ PLAYER_C_MODEL_ID = (
 )
 # PLAYER_B_MODEL_ID = "HuggingFaceH4/zephyr-7b-beta"
 # PLAYER_C_MODEL_ID = "HuggingFaceH4/zephyr-7b-beta"
+game_d = {}
+llm_d = {}
+user_d = {}
+
+
+def set_new_user_d(message):
+    user_d[CURRENT_USER_ID(message)] = time.time()
+
+
+MAX_NUM_USERS = 3
+
+# other variants:
+# self.model = TransformersModelWOQ(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
+# self.model = TransformersModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
+# self.model = InferenceClientModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
+# self.model = InferenceAPIModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
+# self.model = InferenceAPIRequestModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
 
 
 ############ BASEMODEL and Pathes ############

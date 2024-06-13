@@ -22,7 +22,7 @@ after each answer.
 **Explanatory** means - before Player A is given the opportunity to answer, they will see Player B's response. After
 each series of questions and answers, Player C's reasoning for making their decision will be shown.
 
-### Some technical realisation details:
+## Some technical backend realisation details:
 
 All are free and simple
 
@@ -60,3 +60,13 @@ Quick start to llama-cpp-python package : https://llama-cpp-python.readthedocs.i
 `pip install accelerate` - for device_map="auto"
 
 `pip install optimum, auto-gptq` - for GPTQQuantizer
+
+
+## Some technical ML realisation details:
+
+Players C's decisions provided with **text-generation** task LLM.
+
+LLM-GGUF to use here : second-state/Llama-3-8B-Instruct-GGUF/Meta-Llama-3-8B-Instruct-Q4_K_M.gguf
+### todo:
+- Players C's decisions provided with **embeddings-classification** task LLM.
+- Add other LLMs for comparing

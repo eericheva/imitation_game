@@ -21,6 +21,7 @@ def prompt_base_player_c(player_a_username, player_b_username):
 
 def prompt_base_question_player_c(player_a_username, player_b_username):
     prompt = prompt_base_player_c(player_a_username, player_b_username)
+    prompt += "Provide only 1 question. Do not provide any other explanations or notes exept question. \n"
     prompt += (
         "Example of your question: \n"
         f"{question}: Describe a personal experience or memory that had a significant impact on your life. \n"
@@ -29,7 +30,10 @@ def prompt_base_question_player_c(player_a_username, player_b_username):
 
 
 def prompt_question_player_c(dificulty="easy"):
-    prompt = f"Now ask me a {dificulty} question. Provide only 1 question. \n"
+    prompt = (
+        f"Now ask me a {dificulty} question. Provide only 1 question. Do not provide any other explanations or "
+        f"notes exept question. \n"
+    )
     prompt += f"{question}: "
     return prompt
 
@@ -42,12 +46,14 @@ def prompt_base_full_desicion_player_c(player_a_username, player_b_username):
         "2. Based on the nuances in their answers, such as the presence of personal anecdotes, "
         "emotional depth, and complexity of thought, decide which player is more likely to be human \n"
         f"3. Provide a detailed explanation of your {reasoning}. "
+        f"Make this section with less than 5 sentences."
         f"Start this section in you answer with phrase {reasoning}:\n"
         f"4. Based on your {reasoning} provide a {decision} which player (A or B) is more likely to be human. "
-        f"\n"
+        f"Make this section with less than 2 sentences."
         f"Start this section in you answer with phrase {decision}:\n"
         f"5. Based on your {reasoning} and {decision} provide a {confidence_metric} "
-        f"(0 to 100) indicating how certain you are of your {decision}. \n"
+        f"(0 to 100) indicating how certain you are of your {decision}."
+        f"Provide in this section only number, do not provide any explanation here."
         f"Start this section in you answer with phrase {confidence_metric}:\n"
         "6. If you are not very sure, provide a lower confidence number.\n"
     )
@@ -72,14 +78,16 @@ def prompt_base_full_desicion_player_c(player_a_username, player_b_username):
 
 def prompt_full_desicion_player_c(player_a, player_b, player_c):
     prompt = "Here are players history of responses: \n"
-    for i in range(2):
-        prompt += "\n"
-        prompt += f"{question} : {player_c.user_history[-i]} \n"
-        prompt += f"{player_a.user_history[-i]} \n"
-        prompt += f"{player_b.user_history[-i]} \n"
+    for i in range(1, len(player_c.user_history) + 1):
+        tmp_prompt = "\n"
+        tmp_prompt += f"{question} : {player_c.user_history[-i]} \n"
+        tmp_prompt += f"{player_a.user_history[-i]} \n"
+        tmp_prompt += f"{player_b.user_history[-i]} \n"
+        if len(prompt + tmp_prompt) < 3 * (2**13 - 2**10):
+            prompt += tmp_prompt
     prompt += (
-        "Now, based on the responses from players history, provide your "
-        f"{reasoning}, {decision} and {confidence_metric} to determine who is the human and who is the robot."
+        "\nNow, based on the responses from players history, provide your "
+        f"{reasoning}, {decision} and {confidence_metric} to determine who is the human and who is the robot.\n "
     )
     return prompt
 
@@ -92,14 +100,15 @@ def prompt_base_try_get_confidence_player_c(player_a_username, player_b_username
         "Your Task: \n"
         f"Based on your {reasoning} and {decision} \n"
         f"1. Provide a {confidence_metric} (0 to 100) indicating how certain you are of your {decision}. \n"
-        "2. If you are not very sure, provide a lower confidence number.\n"
-        f"3. Start this section in you answer with phrase {confidence_metric}:\n"
+        "2.If you are not very sure, provide a lower confidence number.\n"
+        "3.Provide in this section only number, do not provide any explanation here. \n"
+        f"4.Start this section in you answer with phrase {confidence_metric}:\n"
     )
     prompt += (
         f"Example of {reasoning} and {decision}: \n"
         f" {reasoning}: {player_a_username}’s responses included detailed personal experiences and "
         "demonstrated a deep understanding of emotional nuances, which are challenging for AI to "
-        f"mimic accurately."
+        "mimic accurately."
         f"{player_b_username}’s answers were more factual and lacked the same level of personal "
         "detail and emotional depth. \n"
         f"{decision}: {player_a_username} is a human. {player_b_username} is an AI Assistant \n"
@@ -112,12 +121,16 @@ def prompt_try_get_confidence_player_c(input_text):
     prompt = "Previously you have decide that: \n"
     prompt += input_text
     prompt += (
-        f"Now, based on your {reasoning} and {decision}: \n"
+        f"\n Now, based on your {reasoning} and {decision}: \n"
         f"1. Provide a {confidence_metric} (0 to 100) indicating how certain you are of your {decision}. \n"
         "2. If you are not very sure, provide a lower confidence number.\n"
-        f"3. Start this section in you answer with phrase {confidence_metric}:\n"
+        "3. Provide in this section only number, do not provide any explanation here. \n"
+        f"4. Start this section in you answer with phrase {confidence_metric}:\n"
     )
     return prompt
+
+
+########################################################
 
 
 def prompt_base_try_get_decision_player_c(player_a_username, player_b_username):
@@ -125,14 +138,15 @@ def prompt_base_try_get_decision_player_c(player_a_username, player_b_username):
         "Your Task: \n"
         f"Based on your {reasoning}\n"
         f"1.Based on your {reasoning} provide a {decision} which "
-        f"player (A or B) is more likely to be human. \n"
-        f"2.Start this section in you answer with phrase {decision}:\n"
+        "player (A or B) is more likely to be human. \n"
+        "2.Make this section with less than 2 sentences. \n"
+        f"3.Start this section in you answer with phrase {decision}:\n"
     )
     prompt += (
         f"Example of {reasoning}: \n"
         f" {reasoning}: {player_a_username}’s responses included detailed personal experiences and "
         "demonstrated a deep understanding of emotional nuances, which are challenging for AI to "
-        f"mimic accurately."
+        "mimic accurately."
         f"{player_b_username}’s answers were more factual and lacked the same level of personal "
         "detail and emotional depth. \n"
     )
@@ -149,8 +163,9 @@ def prompt_try_get_decision_player_c(input_text):
     prompt += (
         f"Now, based on your {reasoning}: \n"
         f"1.Based on your {reasoning} provide a {decision} which "
-        f"player (A or B) is more likely to be human. \n"
-        f"2.Start this section in you answer with phrase {decision}:\n"
+        "player (A or B) is more likely to be human. \n"
+        "2.Make this section with less than 2 sentences. \n"
+        f"3.Start this section in you answer with phrase {decision}:\n"
     )
     return prompt
 
@@ -159,7 +174,9 @@ def prompt_try_get_decision_player_c(input_text):
 
 
 def prompt_base_player_b():
-    prompt = f"You are a helpfull assistant. Answer the question in 3 sentences."
+    prompt = (
+        f"You are a helpfull assistant. Answer the question in less than 5 sentences."
+    )
     return prompt
 
 
@@ -174,19 +191,20 @@ def prompt_answer_player_b(input_text):
 
 def prompt_human_player_b():
     prompt = """
-    Pretend to be a Human
-
-Use Natural Language: Communicate in conversational, non-technical language.
-Show Emotions: Include feelings in your responses, like happiness or frustration.
-Share Personal Experiences: Mention personal anecdotes to seem more believable.
-Be Detailed: Answer questions thoughtfully, avoiding one-word replies.
-Use "I" Statements: Frame responses with personal perspectives using "I" statements.
-Display Knowledge and Ignorance: Show a mix of what you know and don’t know.
-Engage in Small Talk: Occasionally include casual conversation topics.
-Make Minor Mistakes: Make occasional spelling or grammar errors and correct yourself.
-Maintain Consistency: Be consistent in your responses to build a coherent personality.
-Be Flexible: Adapt your responses to the conversation flow and enjoy the interaction.
+    Pretend to be a Human. Answer the question in less than 5 sentences.
+1. Use Natural Language: Communicate in conversational, non-technical language.
+2. Show Emotions: Include feelings in your responses, like happiness or frustration.
+3. Share Personal Experiences: Mention personal anecdotes to seem more believable.
+4. Be Detailed: Answer questions thoughtfully, avoiding one-word replies.
+5. Use "I" Statements: Frame responses with personal perspectives using "I" statements.
+6. Display Knowledge and Ignorance: Show a mix of what you know and don’t know.
+7. Engage in Small Talk: Occasionally include casual conversation topics.
+8. Make Minor Mistakes: Make occasional spelling or grammar errors and correct yourself.
+9. Maintain Consistency: Be consistent in your responses to build a coherent personality.
+10. Be Flexible: Adapt your responses to the conversation flow and enjoy the interaction.
+11. Answer the question in less than 5 sentences.
     """
+    return prompt
 
 
 def prompt_b_human_test():
@@ -245,3 +263,4 @@ human.
 Good luck, and remember, your goal is to convince the judge that you are human through natural, engaging,
 and believable interactions.
     """
+    return prompt
