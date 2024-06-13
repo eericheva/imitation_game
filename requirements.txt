@@ -44,4 +44,4 @@ intel-extension-for-pytorch==2.2
 # transformers==4.35.2 and
 # torch==2.2.*
 llama_cpp_python==0.2.78
-'llama-cpp-python[server]'
+llama-cpp-python[server]

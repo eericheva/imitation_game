@@ -115,7 +115,7 @@ def set_new_nonactive_user_d(message):
     nonactive_user_d[CURRENT_USER_ID(message)] = time.time()
 
 
-MAX_NUM_USERS = 3
+MAX_NUM_USERS = 1
 TIME_NONACTIV_USER_KICK = 5 * 60
 
 logger.info(f"SETUP FINISHED")

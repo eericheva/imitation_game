@@ -11,9 +11,9 @@ from main_setups.setup import (
     IG_bot,
     llm_d,
     MAX_NUM_USERS,
+    nonactive_user_d,
     PLAYER_MODEL_ID,
     set_new_nonactive_user_d,
-    nonactive_user_d,
 )
 from speech_tools import speech_tools
 from telegram_bot_messages import (
@@ -34,7 +34,7 @@ from telegram_bot_messages import (
 )
 async def get_start_command(message):
     if CURRENT_USER_ID(message) not in game_d:
-        if len(game_d) > MAX_NUM_USERS:
+        if len(game_d) >= MAX_NUM_USERS:
             await telegram_bot_start_session.message_wait_new_session(message)
         else:
             new_user(message)
@@ -56,7 +56,7 @@ async def get_stop_command(message):
 @IG_bot.message_handler(content_types=["text"])
 async def get_messages_text(message):
     if CURRENT_USER_ID(message) not in game_d:
-        if len(game_d) > MAX_NUM_USERS:
+        if len(game_d) >= MAX_NUM_USERS:
             await telegram_bot_start_session.message_wait_new_session(message)
         else:
             new_user(message)
@@ -82,7 +82,7 @@ async def get_messages_text(message):
 @IG_bot.message_handler(content_types=["audio", "voice"])
 async def get_messages_voice(message):
     if CURRENT_USER_ID(message) not in game_d:
-        if len(game_d) > MAX_NUM_USERS:
+        if len(game_d) >= MAX_NUM_USERS:
             await telegram_bot_start_session.message_wait_new_session(message)
         else:
             new_user(message)
@@ -126,7 +126,7 @@ async def get_messages_voice(message):
 async def check_button_ask_start_game(call):
     if call.data in [basemodel_Imitation_Game.GameStartItems.start_game.value]:
         if CURRENT_USER_ID(call) not in game_d:
-            if len(game_d) > MAX_NUM_USERS:
+            if len(game_d) >= MAX_NUM_USERS:
                 await telegram_bot_start_session.message_wait_new_session(call)
             else:
                 new_user(call)

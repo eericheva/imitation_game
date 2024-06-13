@@ -14,7 +14,7 @@ async def ask_start_new_session(message):
 async def message_wait_new_session(message):
     await _greet_me(message)
     input_text = (
-        "Too many users wright now. I can't handle one more((( Pls, try later again"
+        "Too many users right now. I can't handle one more((( Pls, try later again"
     )
     await IG_bot.send_message(CURRENT_USER_ID(message), input_text)
     await message_stop_game(message)

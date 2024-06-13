@@ -31,7 +31,8 @@ def prompt_base_question_player_c(player_a_username, player_b_username):
 
 def prompt_question_player_c(dificulty="easy"):
     prompt = (
-        f"Now ask me a {dificulty} question. Provide only 1 question. Do not provide any other explanations or "
+        f"Now ask me a {dificulty} but unexpectedly question. Find such type of question, which help to find who "
+        f"is a human and who is an AI Assistant. Provide only 1 question. Do not provide any other explanations or "
         f"notes exept question. \n"
     )
     prompt += f"{question}: "
