@@ -19,7 +19,7 @@ RUN apt-get install -y tcl
 RUN apt-get -y install git
 RUN apt-get install -y ffmpeg
 
-ARG PYTHON_VERSION=3.9.12
+ARG PYTHON_VERSION=3.11.5
 
 RUN cd /tmp && \
     wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz && \
@@ -33,41 +33,42 @@ RUN cd /tmp && \
     python -m pip install --upgrade pip && \
     rm -r /root/.cache/pip
 
-ARG PYTORCH_VERSION=2.0.0
-#ARG PYTORCH_VERSION_SUFFIX=+cpu
-ARG TORCHVISION_VERSION=0.15.0
-#ARG TORCHVISION_VERSION_SUFFIX=+cpu
-ARG TORCHAUDIO_VERSION=2.0.0
-#ARG TORCHAUDIO_VERSION_SUFFIX=+cpu
-ARG PYTORCH_DOWNLOAD_URL=https://download.pytorch.org/whl/cu118/torch_stable.html
-
-RUN if [ ! $TORCHAUDIO_VERSION ]; \
-    then \
-        TORCHAUDIO=; \
-    else \
-        TORCHAUDIO=torchaudio==${TORCHAUDIO_VERSION}${TORCHAUDIO_VERSION_SUFFIX}; \
-    fi && \
-    if [ ! $PYTORCH_DOWNLOAD_URL ]; \
-    then \
-        pip install \
-            torch==${PYTORCH_VERSION}${PYTORCH_VERSION_SUFFIX} \
-            torchvision==${TORCHVISION_VERSION}${TORCHVISION_VERSION_SUFFIX} \
-            ${TORCHAUDIO}; \
-    else \
-        pip install \
-            torch==${PYTORCH_VERSION}${PYTORCH_VERSION_SUFFIX} \
-            torchvision==${TORCHVISION_VERSION}${TORCHVISION_VERSION_SUFFIX} \
-            ${TORCHAUDIO} \
-            -f ${PYTORCH_DOWNLOAD_URL}; \
-    fi && \
-    rm -r /root/.cache/pip
+#ARG PYTORCH_VERSION=2.0.0
+##ARG PYTORCH_VERSION_SUFFIX=+cpu
+#ARG TORCHVISION_VERSION=0.15.0
+##ARG TORCHVISION_VERSION_SUFFIX=+cpu
+#ARG TORCHAUDIO_VERSION=2.0.0
+##ARG TORCHAUDIO_VERSION_SUFFIX=+cpu
+#ARG PYTORCH_DOWNLOAD_URL=https://download.pytorch.org/whl/cu118/torch_stable.html
+#
+#RUN if [ ! $TORCHAUDIO_VERSION ]; \
+#    then \
+#        TORCHAUDIO=; \
+#    else \
+#        TORCHAUDIO=torchaudio==${TORCHAUDIO_VERSION}${TORCHAUDIO_VERSION_SUFFIX}; \
+#    fi && \
+#    if [ ! $PYTORCH_DOWNLOAD_URL ]; \
+#    then \
+#        pip install \
+#            torch==${PYTORCH_VERSION}${PYTORCH_VERSION_SUFFIX} \
+#            torchvision==${TORCHVISION_VERSION}${TORCHVISION_VERSION_SUFFIX} \
+#            ${TORCHAUDIO}; \
+#    else \
+#        pip install \
+#            torch==${PYTORCH_VERSION}${PYTORCH_VERSION_SUFFIX} \
+#            torchvision==${TORCHVISION_VERSION}${TORCHVISION_VERSION_SUFFIX} \
+#            ${TORCHAUDIO} \
+#            -f ${PYTORCH_DOWNLOAD_URL}; \
+#    fi && \
+#    rm -r /root/.cache/pip
 
 WORKDIR /workspace
 
 ADD requirements.txt .
-RUN python3.9 -m pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install --no-cache-dir -r requirements.txt
 
 ADD . /workspace
 
-CMD ["python3.9", "main.py"]
+CMD ["python", "main.py"]
+#CMD["ulimit -l unlimited && python3 llama_cpp.server", "main.py"]
 # RUN python3.9 main.py

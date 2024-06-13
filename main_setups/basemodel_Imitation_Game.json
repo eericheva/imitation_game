@@ -23,16 +23,26 @@
                 "last_call": {
                     "type": "object",
                     "default": null
+                },
+                "game_status": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "game_mode": {
+                    "$ref": "#/definitions/GameMode"
+                },
+                "game_type": {
+                    "$ref": "#/definitions/GameType"
+                },
+                "model": {
+                    "type": "object",
+                    "default": null
                 }
             }
         },
         "Player": {
             "type": "object",
             "properties": {
-                "userid": {
-                    "type": "integer",
-                    "default": null
-                },
                 "username": {
                     "type": "string",
                     "default": "null"
@@ -49,11 +59,42 @@
                         "type": "string"
                     }
                 },
+                "game_chat_id": {
+                    "type": "integer",
+                    "default": null
+                },
                 "model": {
                     "type": "object",
                     "default": null
+                },
+                "game_type": {
+                    "$ref": "#/definitions/GameType"
                 }
             }
+        },
+        "ChatIndicators": {
+            "type": "string",
+            "enum": [
+                "Question",
+                "Answer",
+                "Reasoning",
+                "Decision",
+                "Confidence Metric"
+            ]
+        },
+        "GameMode": {
+            "type": "string",
+            "enum": [
+                "blind",
+                "full"
+            ]
+        },
+        "GameType": {
+            "type": "string",
+            "enum": [
+                "direct",
+                "inverse"
+            ]
         },
         "Prefixes": {
             "type": "string",
