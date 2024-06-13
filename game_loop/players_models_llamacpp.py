@@ -36,7 +36,7 @@ class TransformersModelLLamaCPP:
                 verbose=False,
             )
 
-    def query(self, input_text, base_text):
+    async def query(self, input_text, base_text):
         messages = [
             {"role": "system", "content": base_text},
             {"role": "user", "content": input_text},

@@ -3,7 +3,7 @@ import asyncio
 import time
 
 from game_loop.imitationgame import ImitationGame
-from game_loop.players_models_llamacpp import TransformersModelLLamaCPP
+from game_loop.players_models_openai import TransformersModelOpenAI
 from main_setups import basemodel_Imitation_Game
 from main_setups.setup import (
     CURRENT_USER_ID,
@@ -11,9 +11,9 @@ from main_setups.setup import (
     IG_bot,
     llm_d,
     MAX_NUM_USERS,
-    PLAYER_C_MODEL_ID,
-    set_new_user_d,
-    user_d,
+    PLAYER_MODEL_ID,
+    set_new_nonactive_user_d,
+    nonactive_user_d,
 )
 from speech_tools import speech_tools
 from telegram_bot_messages import (
@@ -62,7 +62,7 @@ async def get_messages_text(message):
             new_user(message)
             await telegram_bot_start_session.ask_start_new_session(message)
     else:
-        set_new_user_d(message)
+        set_new_nonactive_user_d(message)
         if game_d[CURRENT_USER_ID(message)].game_status:
             user_text = message.text
             if not game_d[CURRENT_USER_ID(message)].proceed_user_message_checks():
@@ -71,7 +71,7 @@ async def get_messages_text(message):
                 )
             while not game_d[CURRENT_USER_ID(message)].proceed_user_message_checks():
                 await asyncio.sleep(5)
-            set_new_user_d(message)
+            set_new_nonactive_user_d(message)
             await game_d[CURRENT_USER_ID(message)].proceed_user_message(
                 message, user_text
             )
@@ -88,7 +88,7 @@ async def get_messages_voice(message):
             new_user(message)
             await telegram_bot_start_session.ask_start_new_session(message)
     else:
-        set_new_user_d(message)
+        set_new_nonactive_user_d(message)
         if game_d[CURRENT_USER_ID(message)].game_status:
             if message.voice.duration > 30:
                 await telegram_bot_answers.message_send(
@@ -104,7 +104,7 @@ async def get_messages_voice(message):
                 )
             while not game_d[CURRENT_USER_ID(message)].proceed_user_message_checks():
                 await asyncio.sleep(5)
-            set_new_user_d(message)
+            set_new_nonactive_user_d(message)
             await game_d[CURRENT_USER_ID(message)].proceed_user_message(
                 message, user_text
             )
@@ -132,7 +132,7 @@ async def check_button_ask_start_game(call):
                 new_user(call)
         else:
             game_d[CURRENT_USER_ID(call)].stop_game()
-            user_d[CURRENT_USER_ID(call)] = time.time()
+            nonactive_user_d[CURRENT_USER_ID(call)] = time.time()
             await telegram_bot_start_session.ask_game_mode(call)
             await telegram_bot_start_session.ask_game_type(call)
             game_d[CURRENT_USER_ID(call)].setup_game_base(
@@ -162,7 +162,7 @@ async def check_button_ask_game_mode(call):
         f"We'll play **{call.data}** mode.",
     )
     game_d[CURRENT_USER_ID(call)].setup_game_mode(call.data)
-    user_d[CURRENT_USER_ID(call)] = time.time()
+    nonactive_user_d[CURRENT_USER_ID(call)] = time.time()
 
 
 @IG_bot.callback_query_handler(
@@ -178,15 +178,20 @@ async def check_button_ask_game_type(call):
         f"We'll play **{call.data}** imitation game.",
     )
     game_d[CURRENT_USER_ID(call)].setup_game_type(call.data)
-    user_d[CURRENT_USER_ID(call)] = time.time()
+    nonactive_user_d[CURRENT_USER_ID(call)] = time.time()
 
 
 def new_user(message):
-    llm_d[CURRENT_USER_ID(message)] = TransformersModelLLamaCPP(
-        model_id=PLAYER_C_MODEL_ID
-    )
+    # other variants:
+    # self.model = TransformersModelWOQ(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
+    # self.model = TransformersModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
+    # self.model = InferenceClientModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
+    # self.model = InferenceAPIModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
+    # self.model = InferenceAPIRequestModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
+
+    llm_d[CURRENT_USER_ID(message)] = TransformersModelOpenAI(model_id=PLAYER_MODEL_ID)
     game_d[CURRENT_USER_ID(message)] = ImitationGame()
-    set_new_user_d(message)
+    set_new_nonactive_user_d(message)
 
 
 asyncio.run(IG_bot.infinity_polling())

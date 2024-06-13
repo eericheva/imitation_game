@@ -31,46 +31,6 @@ if not os.path.exists("main_setups/telegram_bot_token.py"):
 else:
     from main_setups.telegram_bot_token import TOKEN, HUGGINGFACE_TOKEN
 
-############ Elements ############
-TOKEN = TOKEN
-HUGGINGFACE_TOKEN = HUGGINGFACE_TOKEN
-
-IG_bot = AsyncTeleBot(TOKEN)
-# IG_bot.remove_webhook()
-
-# PLAYER_B_MODEL_ID = "Qwen/Qwen2-7B-Instruct-GPTQ-Int8"
-# PLAYER_C_MODEL_ID = "Qwen/Qwen2-7B-Instruct-GPTQ-Int8"
-# PLAYER_B_MODEL_ID = "Qwen/Qwen2-7B-Instruct"
-# PLAYER_C_MODEL_ID = "Qwen/Qwen2-7B-Instruct"
-# PLAYER_B_MODEL_ID = "meta-llama/Meta-Llama-3-8B-Instruct"
-# PLAYER_C_MODEL_ID = "meta-llama/Meta-Llama-3-8B-Instruct"
-PLAYER_B_MODEL_ID = (
-    "second-state/Llama-3-8B-Instruct-GGUF/Meta-Llama-3-8B-Instruct-Q4_K_M.gguf"
-)
-PLAYER_C_MODEL_ID = (
-    "second-state/Llama-3-8B-Instruct-GGUF/Meta-Llama-3-8B-Instruct-Q4_K_M.gguf"
-)
-# PLAYER_B_MODEL_ID = "HuggingFaceH4/zephyr-7b-beta"
-# PLAYER_C_MODEL_ID = "HuggingFaceH4/zephyr-7b-beta"
-game_d = {}
-llm_d = {}
-user_d = {}
-
-
-def set_new_user_d(message):
-    user_d[CURRENT_USER_ID(message)] = time.time()
-
-
-MAX_NUM_USERS = 3
-
-# other variants:
-# self.model = TransformersModelWOQ(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
-# self.model = TransformersModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
-# self.model = InferenceClientModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
-# self.model = InferenceAPIModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
-# self.model = InferenceAPIRequestModel(model_id=PLAYER_C_MODEL_ID, game_chat_id=game_chat_id)
-
-
 ############ BASEMODEL and Pathes ############
 this_project_path = os.getcwd()
 JSON_SCHEMA_PATH = os.path.join(
@@ -92,25 +52,6 @@ DATA_PATH = os.path.join(this_project_path, "data")
 if not os.path.isdir(DATA_PATH):
     os.makedirs(DATA_PATH)
 
-# download models from huggingface_hub locally
-if not os.path.exists(os.path.join(DATA_PATH, PLAYER_B_MODEL_ID)):
-    logger.info(f"loading {PLAYER_B_MODEL_ID}")
-    snapshot_download(
-        repo_id=PLAYER_B_MODEL_ID,
-        local_dir=os.path.join(DATA_PATH, PLAYER_B_MODEL_ID),
-        local_dir_use_symlinks=True,
-        token=HUGGINGFACE_TOKEN,
-        # force_download = True
-    )
-if not os.path.exists(os.path.join(DATA_PATH, PLAYER_C_MODEL_ID)):
-    logger.info(f"loading {PLAYER_C_MODEL_ID}")
-    snapshot_download(
-        repo_id=PLAYER_C_MODEL_ID,
-        local_dir=os.path.join(DATA_PATH, PLAYER_C_MODEL_ID),
-        local_dir_use_symlinks=True,
-        token=HUGGINGFACE_TOKEN,
-    )
-
 ############ GLOBAL VARIABLES ############
 
 CURRENT_USER_ID = (
@@ -129,5 +70,52 @@ CURRENT_USER_ID_NAME = lambda id, username: str(id) + "." + username
 MESSAGE_WRAPPER = (
     lambda username: f"{username} {basemodel_Imitation_Game.MessageWrapper.says.value} : "
 )
+
+############ Elements ############
+TOKEN = TOKEN
+HUGGINGFACE_TOKEN = HUGGINGFACE_TOKEN
+
+IG_bot = AsyncTeleBot(TOKEN)
+# IG_bot.remove_webhook()
+
+# other variants
+# PLAYER_MODEL_ID = "HuggingFaceH4/zephyr-7b-beta"
+# PLAYER_MODEL_ID = "Qwen/Qwen2-7B-Instruct"
+PLAYER_MODEL_ID = (
+    "second-state/Llama-3-8B-Instruct-GGUF/Meta-Llama-3-8B-Instruct-Q4_K_M.gguf"
+)
+# download models from huggingface_hub locally
+try:
+    if not os.path.exists(os.path.join(DATA_PATH, PLAYER_MODEL_ID)):
+        logger.info(f"loading {PLAYER_MODEL_ID}")
+        snapshot_download(
+            repo_id=PLAYER_MODEL_ID,
+            local_dir=os.path.join(DATA_PATH, PLAYER_MODEL_ID),
+            local_dir_use_symlinks=True,
+            token=HUGGINGFACE_TOKEN,
+            # force_download = True
+        )
+except:
+    if not os.path.exists(os.path.join(DATA_PATH, PLAYER_MODEL_ID)):
+        logger.info(f"loading {PLAYER_MODEL_ID}")
+        snapshot_download(
+            repo_id=PLAYER_MODEL_ID,
+            local_dir=os.path.join(DATA_PATH, PLAYER_MODEL_ID),
+            local_dir_use_symlinks=True,
+            token=HUGGINGFACE_TOKEN,
+            force_download=True,
+        )
+
+game_d = {}
+llm_d = {}
+nonactive_user_d = {}
+
+
+def set_new_nonactive_user_d(message):
+    nonactive_user_d[CURRENT_USER_ID(message)] = time.time()
+
+
+MAX_NUM_USERS = 3
+TIME_NONACTIV_USER_KICK = 5 * 60
 
 logger.info(f"SETUP FINISHED")

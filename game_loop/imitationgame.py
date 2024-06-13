@@ -34,16 +34,13 @@ class ImitationGame(basemodel_Imitation_Game.Game):
 
     def setup_game_mode(self, game_mode):
         self.game_mode = game_mode
-        logger.info("setup_game_mode")
 
     def setup_game_type(self, game_type):
         self.game_type = game_type
         self.playerB.setup_game_type(game_type)
-        logger.info("setup_game_type")
 
     def start_game_checks(self):
         if self.game_mode and self.game_type:
-            logger.info("start_game_checks")
             return True
         else:
             return False
@@ -64,22 +61,22 @@ class ImitationGame(basemodel_Imitation_Game.Game):
             f"I'm forming a question. Wait a min.",
         )
         # PlayerC
-        logger.info("playerC.form_question")
-        self.playerC.form_question(self.playerA, self.playerB)
+        logger.info(f"{self.game_chat_id} - playerC.form_question")
+        await self.playerC.form_question(self.playerA, self.playerB)
         await telegram_bot_answers.message_send(
             self.game_chat_id, self.playerC.last_message
         )
         # PlayerA
-        logger.info("ask_user_turn")
+        logger.info(f"{self.game_chat_id} - ask_user_turn")
         await telegram_bot_answers.ask_user_turn(self.game_chat_id)
         # PlayerB
-        logger.info("playerB.form_answer")
-        self.playerB.form_answer(self.playerC.last_message)
+        logger.info(f"{self.game_chat_id} - playerB.form_answer")
+        await self.playerB.form_answer(self.playerC.last_message)
         if self.game_mode == basemodel_Imitation_Game.GameMode.full.value:
             await telegram_bot_answers.message_send(
                 self.game_chat_id, self.playerB.last_message
             )
-        logger.info("playerB.form_answer finished")
+        logger.info(f"{self.game_chat_id} - playerB.form_answer finished")
 
     async def proceed_user_message(self, call, user_message):
         self.last_call = call
@@ -87,7 +84,7 @@ class ImitationGame(basemodel_Imitation_Game.Game):
         await telegram_bot_answers.message_send(
             self.game_chat_id, "I'll try to decide. Wait a min"
         )
-        is_there_decision, text_decision = self.playerC.try2decide(
+        is_there_decision, text_decision = await self.playerC.try2decide(
             self.playerA, self.playerB
         )
         if not is_there_decision:
