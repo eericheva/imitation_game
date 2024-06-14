@@ -2,15 +2,23 @@ services:
   llama-cpp-server:
     container_name: llama_cpp_server_container
     image: ghcr.io/eericheva/llama_cpp_server_image:latest
+    build:
+      context: ./llama_cpp_server
+      dockerfile: Dockerfile
     restart: always
     network_mode: "host"
     ports:
       - 8080:8080
 
+
+
   imitation-game:
     container_name: imitation_game_container
     image: ghcr.io/eericheva/imitation_game_image:latest
+    build:
+      context: ./ig_app
+      dockerfile: Dockerfile
     restart: always
     network_mode: "host"
     ports:
-      - 8080:8080
+      - 80:80
