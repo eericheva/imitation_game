@@ -59,8 +59,11 @@ Github Actions:
 
 **Example with run llama.cpp.server**
 
+Main proccess run and serve telegram bot. Llama.ccp server run and serve llm generation.
+
 Files:
-- [Dockerfile](Dockerfile)
+- [Dockerfile_ig](Dockerfile_ig) - Dockerfile for main proccess (uses [requirements_ig.txt](requirements_ig.txt))
+- [Dockerfile_llama_cpp_server](Dockerfile_llama_cpp_server) - Dockerfile for llama.cpp server (uses [requirements_llama_cpp_server.txt](requirements_llama_cpp_server.txt) and [llama_cpp_server_config.json](llama_cpp_server_config.json))
 - [docker-compose.yml](docker-compose.yml)
 
 Github Action:

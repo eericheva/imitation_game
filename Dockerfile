@@ -64,11 +64,13 @@ RUN cd /tmp && \
 
 WORKDIR /workspace
 
-ADD requirements.txt .
-RUN python -m pip install --no-cache-dir -r requirements.txt
+ADD requirements_ig.txt .
+RUN python -m pip install --no-cache-dir -r requirements_ig.txt
 
 ADD . /workspace
+RUN python setup.py
 
-CMD ["python", "main.py"]
+COPY llama_cpp_server_run_wrapper.sh llama_cpp_server_run_wrapper.sh
+CMD ["/usr/bin/supervisord"]
+#CMD ["python", "main.py"]
 #CMD["ulimit -l unlimited && python3 llama_cpp.server", "main.py"]
-# RUN python3.9 main.py

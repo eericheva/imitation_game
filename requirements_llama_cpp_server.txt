@@ -1,0 +1,3 @@
+llama_cpp_python[server]==0.2.78
+# Required for HFTokenizer which is required for functionary
+transformers==4.35.2
