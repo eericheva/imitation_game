@@ -83,7 +83,7 @@ IG_bot = AsyncTeleBot(TOKEN)
 PLAYER_MODEL_ID = (
     "second-state/Llama-3-8B-Instruct-GGUF/Meta-Llama-3-8B-Instruct-Q4_K_M.gguf"
 )
-# download models from huggingface_hub locally
+
 # try:
 #     if not os.path.exists(os.path.join(DATA_PATH, PLAYER_MODEL_ID)):
 #         logger.info(f"loading {PLAYER_MODEL_ID}")

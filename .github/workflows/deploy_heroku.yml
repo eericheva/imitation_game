@@ -28,6 +28,7 @@ jobs:
           branch: "main"
         env:
           HD_PORT: 8080
+          HD_HUGGINGFACE_TOKEN: ${{secrets.HUGGINGFACE_TOKEN}}
 
   build_ig:
     runs-on: ubuntu-latest
@@ -46,3 +47,15 @@ jobs:
         env:
           HD_TOKEN: ${{secrets.TELEGRAM_TOKEN}}
           HD_DETECT_LANG_API_KEY: ${{secrets.DETECT_LANG_API_KEY}}
+          HD_HUGGINGFACE_TOKEN: ${{secrets.HUGGINGFACE_TOKEN}}
+
+
+# heroku login
+# heroku apps
+# heroku info -a {{NAME_OF_YOUR_APP}}
+# heroku run bash -a {{NAME_OF_YOUR_APP}}
+# heroku logs --tail --app {{NAME_OF_YOUR_APP}}
+
+# heroku info -a llama-cpp-server
+# heroku run bash -a llama-cpp-server
+# heroku logs --tail --app llama-cpp-server
