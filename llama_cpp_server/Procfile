@@ -1,1 +1,1 @@
-worker: python -m llama_cpp.server --config_file llama_cpp_server_config.json
+worker: python setup.py && python -m llama_cpp.server --config_file llama_cpp_server_config.json
