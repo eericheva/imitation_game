@@ -1,4 +1,4 @@
-from ig_app.main_setups import basemodel_Imitation_Game
+from main_setups import basemodel_Imitation_Game
 
 question = basemodel_Imitation_Game.ChatIndicators.Question.value
 answer = basemodel_Imitation_Game.ChatIndicators.Answer.value
