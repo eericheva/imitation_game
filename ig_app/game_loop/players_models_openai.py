@@ -2,13 +2,15 @@ import random
 
 import openai
 
+from main_setups.setup import LLAMA_CPP_SERVER_PORT, LLAMA_CPP_SERVER_URL
+
 
 class TransformersModelOpenAI:
     def __init__(self, model_id):
         self.model = openai.AsyncOpenAI(
             api_key="sdfvkjwnefv",  # can be anything
-            base_url="http://0.0.0.0:8080/v1"
-            # base_url="https://llama-cpp-server-85d673e8fcdf.herokuapp.com:8080/v1"
+            base_url=f"{LLAMA_CPP_SERVER_URL}:{LLAMA_CPP_SERVER_PORT}/v1"
+            # base_url=f"https://llama-cpp-server-85d673e8fcdf.herokuapp.com:8080/v1"
             # NOTE: Replace with IP address and port of your llama-cpp-python server
         )
 

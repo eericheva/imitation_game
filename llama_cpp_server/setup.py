@@ -64,3 +64,5 @@ except:
         )
 
 logger.info(f"SETUP FINISHED")
+
+os.system("python -m llama_cpp.server --config_file llama_cpp_server_config.json")
