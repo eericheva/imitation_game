@@ -19,6 +19,7 @@ formatter = logging.Formatter(
 )
 handler.setFormatter(formatter)
 logger = logging.getLogger("imitation-game")
+logger.handlers.clear()  # to avoid doubling in logger output
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 logger.propagate = False  # to avoid doubling in logger output
