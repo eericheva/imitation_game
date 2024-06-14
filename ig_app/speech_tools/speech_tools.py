@@ -5,7 +5,7 @@ import pydub
 import speech_recognition
 from gtts import gTTS
 
-from ig_app.main_setups.setup import DATA_PATH
+from main_setups.setup import DATA_PATH
 
 
 def speech2text_me(file_path):

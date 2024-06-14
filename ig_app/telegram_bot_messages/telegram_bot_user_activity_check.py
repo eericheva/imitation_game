@@ -1,7 +1,6 @@
 import asyncio
 import time
 
-import telegram_bot_start_session
 from main_setups.setup import (
     CURRENT_USER_ID,
     game_d,
@@ -12,6 +11,7 @@ from main_setups.setup import (
 )
 
 ################ USER ACTIVITY CHECK ################
+from telegram_bot_messages import telegram_bot_start_session
 
 
 async def user_activity_check(message):

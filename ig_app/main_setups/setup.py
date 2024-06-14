@@ -6,7 +6,7 @@ import time
 import telebot
 from telebot.async_telebot import AsyncTeleBot
 
-from ig_app.main_setups import basemodel_Imitation_Game
+from main_setups import basemodel_Imitation_Game
 
 ########### LOGER ###########
 handler = logging.StreamHandler(sys.stdout)
@@ -29,7 +29,7 @@ if not os.path.exists("main_setups/telegram_bot_token.py"):
     TOKEN = os.environ.get("TOKEN")
     HUGGINGFACE_TOKEN = os.environ.get("HUGGINGFACE_TOKEN")
 else:
-    from ig_app.main_setups.telegram_bot_token import TOKEN, HUGGINGFACE_TOKEN
+    from main_setups.telegram_bot_token import TOKEN, HUGGINGFACE_TOKEN
 
 ############ BASEMODEL and Pathes ############
 this_project_path = os.getcwd()

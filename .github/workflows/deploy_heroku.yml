@@ -52,6 +52,7 @@ jobs:
 
 # heroku login
 # heroku apps
+# heroku config
 # heroku info -a {{NAME_OF_YOUR_APP}}
 # heroku run bash -a {{NAME_OF_YOUR_APP}}
 # heroku logs --tail --app {{NAME_OF_YOUR_APP}}
@@ -59,3 +60,7 @@ jobs:
 # heroku info -a llama-cpp-server
 # heroku run bash -a llama-cpp-server
 # heroku logs --tail --app llama-cpp-server
+
+# heroku info -a imitation-game
+# heroku run bash -a imitation-game
+# heroku logs --tail --app imitation-game

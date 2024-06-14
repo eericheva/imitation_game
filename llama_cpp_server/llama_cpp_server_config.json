@@ -9,7 +9,7 @@
             "n_ctx": 0,
             "use_mlock": "true",
             "flash_attn": "true",
-            "verbose": "true"
+            "verbose": "false"
         }
     ]
 }

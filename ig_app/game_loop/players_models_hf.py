@@ -3,8 +3,8 @@ import os
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from ig_app.main_setups.setup import DATA_PATH, HUGGINGFACE_TOKEN
-from ig_app.telegram_bot_messages import telegram_bot_answers
+from main_setups.setup import DATA_PATH, HUGGINGFACE_TOKEN
+from telegram_bot_messages import telegram_bot_answers
 
 
 class TransformersModel:
