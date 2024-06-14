@@ -12,10 +12,11 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.actor }}/imitation_game_image:latest
+  IMAGE_NAME_LLAMACPP: ${{ github.actor }}/llama_cpp_server_image:latest
+  IMAGE_NAME_IG: ${{ github.actor }}/imitation_game_image:latest
 
 jobs:
-  publish:
+  publish_llama_cpp_server:
     name: Build and Publish Image to ghcr.io
     runs-on: ubuntu-latest
 
@@ -26,11 +27,25 @@ jobs:
           echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build Image and Publish to ghcr.io
         run: |
-          docker build . --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          docker build --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LLAMACPP }} -f Dockerfile_llama_cpp_server .
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LLAMACPP }}
+
+  publish_imitation_game:
+    name: Build and Publish Image to ghcr.io
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to ghcr.io
+        run: |
+          echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Build Image and Publish to ghcr.io
+        run: |
+          docker build --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_IG }} -f Dockerfile_ig .
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_IG }}
 
   deploy:
-    needs: publish
+    needs: [publish_llama_cpp_server, publish_imitation_game]
     name: Deploy Image with Docker Compose
     runs-on: ubuntu-latest
 

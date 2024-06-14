@@ -1,8 +1,16 @@
 services:
-  frontend:
+  llama-cpp-server:
+    container_name: llama_cpp_server_container
+    image: ghcr.io/eericheva/llama_cpp_server_image:latest
+    restart: always
+    network_mode: "host"
+    ports:
+      - 8080:8080
+
+  imitation-game:
     container_name: imitation_game_container
     image: ghcr.io/eericheva/imitation_game_image:latest
     restart: always
-
+    network_mode: "host"
     ports:
-      - 3000:3000
+      - 8080:8080
