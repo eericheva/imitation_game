@@ -24,7 +24,7 @@ logger.propagate = False  # to avoid doubling in logger output
 if not os.path.exists("main_setups/telegram_bot_token.py"):
     HUGGINGFACE_TOKEN = os.environ.get("HUGGINGFACE_TOKEN")
 else:
-    from ig_app.main_setups.telegram_bot_token import HUGGINGFACE_TOKEN
+    from main_setups.telegram_bot_token import HUGGINGFACE_TOKEN
 
 ############ BASEMODEL and Pathes ############
 this_project_path = os.getcwd()
