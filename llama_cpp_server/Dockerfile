@@ -35,6 +35,7 @@ WORKDIR /workspace
 
 ADD requirements.txt .
 ADD llama_cpp_server_config.json .
+ADD setup.py .
 
 RUN python -m pip install --no-cache-dir -r requirements.txt
 
@@ -44,6 +45,7 @@ ENV HOST=0.0.0.0
 ENV PORT=8080
 
 EXPOSE ${PORT}
+RUN python setup.py
 
 ENTRYPOINT [ "python", "-m", "llama_cpp.server", "--config_file", "llama_cpp_server_config.json" ]
 #ENTRYPOINT [ "ulimit", "-l", "unlimited", "&&", "python", "-m", "llama_cpp.server", "--config_file", "llama_cpp_server_config.json" ]

@@ -1,8 +1,8 @@
 import telebot
 
-from ig_app.main_setups import basemodel_Imitation_Game
-from ig_app.main_setups.setup import IG_bot, MESSAGE_WRAPPER
-from ig_app.speech_tools.speech_tools import text2speech_me
+from main_setups import basemodel_Imitation_Game
+from main_setups.setup import IG_bot, MESSAGE_WRAPPER
+from speech_tools.speech_tools import text2speech_me
 
 
 async def message_send(chat_id, text_input):

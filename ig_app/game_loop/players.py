@@ -1,6 +1,6 @@
 import re
 
-from ig_app.game_loop.players_prompts_hf import (
+from .players_prompts_hf import (
     prompt_answer_player_b,
     prompt_base_full_desicion_player_c,
     prompt_base_player_b,
@@ -12,8 +12,8 @@ from ig_app.game_loop.players_prompts_hf import (
     prompt_try_get_confidence_player_c,
     prompt_try_get_decision_player_c,
 )
-from ig_app.main_setups import basemodel_Imitation_Game
-from ig_app.main_setups.setup import (
+from main_setups import basemodel_Imitation_Game
+from main_setups.setup import (
     logger,
     MESSAGE_WRAPPER,
 )
