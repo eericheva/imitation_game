@@ -33,18 +33,27 @@ RUN cd /tmp && \
 
 WORKDIR /workspace
 
-ADD requirements_ig.txt .
-RUN python -m pip install --no-cache-dir -r requirements_ig.txt
+ADD requirements.txt .
+ADD llama_cpp_server_config.json .
 
-ADD . /workspace
-CMD ["python", "main.py"]
+RUN python -m pip install --no-cache-dir -r requirements.txt
 
-# docker build -t imitation_game_image -f Dockerfile_ig .
-# docker run --name imitation_game_container --network="host" imitation_game_image:latest
+ADD .. /workspace
+# Set environment variable for the host
+ENV HOST=0.0.0.0
+ENV PORT=8080
 
-# docker build -t ghcr.io/eericheva/imitation_game_image:latest -f Dockerfile_ig .
-# docker push ghcr.io/eericheva/imitation_game_image:latest
-# docker run --name imitation_game_container --network="host" ghcr.io/eericheva/imitation_game_image:latest
+EXPOSE ${PORT}
+
+ENTRYPOINT [ "python", "-m", "llama_cpp.server", "--config_file", "llama_cpp_server_config.json" ]
+#ENTRYPOINT [ "ulimit", "-l", "unlimited", "&&", "python", "-m", "llama_cpp.server", "--config_file", "llama_cpp_server_config.json" ]
+
+# docker build -t llama_cpp_server_image -f ./llama_cpp_server/Dockerfile ./llama_cpp_server
+# docker run --name llama_cpp_server_container --network="host" llama_cpp_server_image:latest
+
+# docker build -t ghcr.io/eericheva/llama_cpp_server_image:latest -f Dockerfile ./llama_cpp_server
+# docker push ghcr.io/eericheva/llama_cpp_server_image:latest
+# docker run --name llama_cpp_server_container --network="host" ghcr.io/eericheva/llama_cpp_server_image:latest
 
 # docker system prune -a
 # docker compose up -d
