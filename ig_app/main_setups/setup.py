@@ -4,10 +4,9 @@ import sys
 import time
 
 import telebot
-from huggingface_hub import snapshot_download
 from telebot.async_telebot import AsyncTeleBot
 
-from main_setups import basemodel_Imitation_Game
+from ig_app.main_setups import basemodel_Imitation_Game
 
 ########### LOGER ###########
 handler = logging.StreamHandler(sys.stdout)
@@ -29,7 +28,7 @@ if not os.path.exists("main_setups/telegram_bot_token.py"):
     TOKEN = os.environ.get("TOKEN")
     HUGGINGFACE_TOKEN = os.environ.get("HUGGINGFACE_TOKEN")
 else:
-    from main_setups.telegram_bot_token import TOKEN, HUGGINGFACE_TOKEN
+    from ig_app.main_setups.telegram_bot_token import TOKEN, HUGGINGFACE_TOKEN
 
 ############ BASEMODEL and Pathes ############
 this_project_path = os.getcwd()
@@ -85,26 +84,26 @@ PLAYER_MODEL_ID = (
     "second-state/Llama-3-8B-Instruct-GGUF/Meta-Llama-3-8B-Instruct-Q4_K_M.gguf"
 )
 # download models from huggingface_hub locally
-try:
-    if not os.path.exists(os.path.join(DATA_PATH, PLAYER_MODEL_ID)):
-        logger.info(f"loading {PLAYER_MODEL_ID}")
-        snapshot_download(
-            repo_id=PLAYER_MODEL_ID,
-            local_dir=os.path.join(DATA_PATH, PLAYER_MODEL_ID),
-            local_dir_use_symlinks=True,
-            token=HUGGINGFACE_TOKEN,
-            # force_download = True
-        )
-except:
-    if not os.path.exists(os.path.join(DATA_PATH, PLAYER_MODEL_ID)):
-        logger.info(f"loading {PLAYER_MODEL_ID}")
-        snapshot_download(
-            repo_id=PLAYER_MODEL_ID,
-            local_dir=os.path.join(DATA_PATH, PLAYER_MODEL_ID),
-            local_dir_use_symlinks=True,
-            token=HUGGINGFACE_TOKEN,
-            force_download=True,
-        )
+# try:
+#     if not os.path.exists(os.path.join(DATA_PATH, PLAYER_MODEL_ID)):
+#         logger.info(f"loading {PLAYER_MODEL_ID}")
+#         snapshot_download(
+#             repo_id=PLAYER_MODEL_ID,
+#             local_dir=os.path.join(DATA_PATH, PLAYER_MODEL_ID),
+#             local_dir_use_symlinks=True,
+#             token=HUGGINGFACE_TOKEN,
+#             # force_download = True
+#         )
+# except:
+#     if not os.path.exists(os.path.join(DATA_PATH, PLAYER_MODEL_ID)):
+#         logger.info(f"loading {PLAYER_MODEL_ID}")
+#         snapshot_download(
+#             repo_id=PLAYER_MODEL_ID,
+#             local_dir=os.path.join(DATA_PATH, PLAYER_MODEL_ID),
+#             local_dir_use_symlinks=True,
+#             token=HUGGINGFACE_TOKEN,
+#             force_download=True,
+#         )
 
 game_d = {}
 llm_d = {}

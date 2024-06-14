@@ -4,8 +4,8 @@ import intel_extension_for_pytorch as ipex
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from main_setups.setup import DATA_PATH, HUGGINGFACE_TOKEN, logger
-from telegram_bot_messages import telegram_bot_answers
+from ig_app.main_setups.setup import DATA_PATH, HUGGINGFACE_TOKEN, logger
+from ig_app.telegram_bot_messages import telegram_bot_answers
 
 
 class TransformersModelWOQ:

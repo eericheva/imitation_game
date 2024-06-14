@@ -1,8 +1,10 @@
 import telebot
 
-from main_setups import basemodel_Imitation_Game
-from main_setups.setup import CURRENT_USER_ID, IG_bot
-from telegram_bot_messages.telegram_bot_user_activity_check import user_activity_check
+from ig_app.main_setups import basemodel_Imitation_Game
+from ig_app.main_setups.setup import CURRENT_USER_ID, IG_bot
+from ig_app.telegram_bot_messages.telegram_bot_user_activity_check import (
+    user_activity_check,
+)
 
 
 async def ask_start_new_session(message):

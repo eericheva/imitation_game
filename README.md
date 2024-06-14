@@ -86,11 +86,11 @@ Quick start to API interface : https://huggingface.co/inference-api/serverless
 
 Detailed payload parameters for different task types: https://huggingface.co/docs/api-inference/detailed_parameters
 
-example [game_loop/players_models_api.py](game_loop/players_models_api.py)
+example [game_loop/players_models_api.py](ig_app/game_loop/players_models_api.py)
 
 ### Run through HuggingFace local:
 
-example [game_loop/players_models_hf.py](game_loop/players_models_hf.py)
+example [game_loop/players_models_hf.py](ig_app/game_loop/players_models_hf.py)
 
 ### Run through local Transformers with Quantization:
 
@@ -109,7 +109,7 @@ pip install intel-extension-for-pytorch==2.2
 
 source lib [intel-extension-for-pytorch](https://github.com/intel/intel-extension-for-pytorch)
 
-example [game_loop/players_models_woq.py](game_loop/players_models_woq.py)
+example [game_loop/players_models_woq.py](ig_app/game_loop/players_models_woq.py)
 
 ### Run through LLama-cpp-python
 
@@ -124,7 +124,7 @@ source [llama-cpp-python/high-level-api](https://github.com/abetlen/llama-cpp-py
 
 Quick start to llama-cpp-python package : https://llama-cpp-python.readthedocs.io/en/latest/
 
-example [game_loop/players_models_llamacpp.py](game_loop/players_models_llamacpp.py)
+example [game_loop/players_models_llamacpp.py](ig_app/game_loop/players_models_llamacpp.py)
 
 ### Run through LLama.cpp Sever and OpenAI API (async):
 
@@ -149,7 +149,7 @@ ulimit -l unlimited && python -m llama_cpp.server --config_file <config_file>
 
 config_file example [llama_cpp_server_covfig.json](llama_cpp_server/llama_cpp_server_config.json)
 
-example [game_loop/players_models_openai.py](game_loop/players_models_openai.py)
+example [game_loop/players_models_openai.py](ig_app/game_loop/players_models_openai.py)
 
 ## Some technical ML realisation details:
 

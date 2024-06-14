@@ -3,8 +3,8 @@ import jsonschema
 from pathlib import Path
 from typing import Dict
 
-from main_setups import basemodel_Imitation_Game
-from main_setups.setup import JSON_SCHEMA_PATH
+from ig_app.main_setups import basemodel_Imitation_Game
+from ig_app.main_setups.setup import JSON_SCHEMA_PATH
 
 
 def assert_valid_markup_ct_general(markup: Dict):

@@ -37,7 +37,7 @@ ADD requirements.txt .
 RUN python -m pip install --no-cache-dir -r requirements.txt
 
 ADD .. /workspace
-CMD ["python", "../main.py"]
+CMD ["python", "main.py"]
 
 # docker build -t imitation_game_image -f Dockerfile ./ig_app
 # docker run --name imitation_game_container --network="host" imitation_game_image:latest
