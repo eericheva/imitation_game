@@ -60,3 +60,7 @@ ENTRYPOINT [ "python", "-m", "llama_cpp.server", "--config_file", "llama_cpp_ser
 # docker system prune -a
 # docker compose up -d
 # check if it is ok here : http://<server-ip>
+
+# docker exec -t -i llama_cpp_server_container /bin/bash
+# docker logs llama_cpp_server_container
+# docker container inspect imitation_game_container

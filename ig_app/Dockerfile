@@ -49,3 +49,7 @@ CMD ["python", "main.py"]
 # docker system prune -a
 # docker compose up -d
 # check if it is ok here : http://<server-ip>
+
+# docker exec -t -i imitation_game_container /bin/bash
+# docker logs imitation_game_container
+# docker container inspect imitation_game_container
