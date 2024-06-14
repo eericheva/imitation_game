@@ -2,7 +2,7 @@ import logging
 import os
 import sys
 
-from huggingface_hub import snapshot_download
+from huggingface_hub import hf_hub_download
 
 ########### LOGER ###########
 handler = logging.StreamHandler(sys.stdout)
@@ -15,6 +15,7 @@ formatter = logging.Formatter(
 )
 handler.setFormatter(formatter)
 logger = logging.getLogger("llama-cpp-server")
+logger.handlers.clear()  # to avoid doubling in logger output
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 logger.propagate = False  # to avoid doubling in logger output
@@ -37,27 +38,27 @@ HUGGINGFACE_TOKEN = HUGGINGFACE_TOKEN
 # other variants
 # PLAYER_MODEL_ID = "HuggingFaceH4/zephyr-7b-beta"
 # PLAYER_MODEL_ID = "Qwen/Qwen2-7B-Instruct"
-PLAYER_MODEL_ID = (
-    "second-state/Llama-3-8B-Instruct-GGUF/Meta-Llama-3-8B-Instruct-Q4_K_M.gguf"
-)
+REPO_ID = "second-state/Llama-3-8B-Instruct-GGUF"
+FILENAME = "Meta-Llama-3-8B-Instruct-Q4_K_M.gguf"
+PLAYER_MODEL_ID = os.path.join(REPO_ID, FILENAME)
 
 try:
     if not os.path.exists(os.path.join(DATA_PATH, PLAYER_MODEL_ID)):
         logger.info(f"loading {PLAYER_MODEL_ID}")
-        snapshot_download(
-            repo_id=PLAYER_MODEL_ID,
-            local_dir=os.path.join(DATA_PATH, PLAYER_MODEL_ID),
-            local_dir_use_symlinks=True,
-            token=HUGGINGFACE_TOKEN,
+        hf_hub_download(
+            repo_id=REPO_ID,
+            filename=FILENAME,
+            local_dir=os.path.join(DATA_PATH, REPO_ID),
+            token=HUGGINGFACE_TOKEN
             # force_download = True
         )
 except:
     if not os.path.exists(os.path.join(DATA_PATH, PLAYER_MODEL_ID)):
         logger.info(f"loading {PLAYER_MODEL_ID}")
-        snapshot_download(
-            repo_id=PLAYER_MODEL_ID,
-            local_dir=os.path.join(DATA_PATH, PLAYER_MODEL_ID),
-            local_dir_use_symlinks=True,
+        hf_hub_download(
+            repo_id=REPO_ID,
+            filename=FILENAME,
+            local_dir=os.path.join(DATA_PATH, REPO_ID),
             token=HUGGINGFACE_TOKEN,
             force_download=True,
         )
