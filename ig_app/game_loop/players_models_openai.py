@@ -7,7 +7,8 @@ class TransformersModelOpenAI:
     def __init__(self, model_id):
         self.model = openai.AsyncOpenAI(
             api_key="sdfvkjwnefv",  # can be anything
-            base_url="http://0.0.0.0:8080/v1"
+            # base_url="http://0.0.0.0:8080/v1"
+            base_url="http://llama-cpp-server-85d673e8fcdf.herokuapp.com:8080"
             # NOTE: Replace with IP address and port of your llama-cpp-python server
         )
 

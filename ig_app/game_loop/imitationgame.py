@@ -1,7 +1,10 @@
-from game_loop.players import GamePlayer, GamePlayerB, GamePlayerC
-from main_setups import basemodel_Imitation_Game
-from main_setups.setup import CURRENT_USER_ID, logger
-from telegram_bot_messages import telegram_bot_answers, telegram_bot_start_session
+from ig_app.game_loop.players import GamePlayer, GamePlayerB, GamePlayerC
+from ig_app.main_setups import basemodel_Imitation_Game
+from ig_app.main_setups.setup import CURRENT_USER_ID, logger
+from ig_app.telegram_bot_messages import (
+    telegram_bot_answers,
+    telegram_bot_start_session,
+)
 
 
 class ImitationGame(basemodel_Imitation_Game.Game):

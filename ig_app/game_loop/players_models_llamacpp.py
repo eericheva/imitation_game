@@ -4,7 +4,7 @@ import random
 import torch
 from llama_cpp import Llama
 
-from main_setups.setup import DATA_PATH, HUGGINGFACE_TOKEN
+from ig_app.main_setups.setup import DATA_PATH, HUGGINGFACE_TOKEN
 
 
 class TransformersModelLLamaCPP:

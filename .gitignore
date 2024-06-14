@@ -1,7 +1,7 @@
 # My adds
 data/
 prompts.txt
-main_setups/telegram_bot_token.py
+ig_app/main_setups/telegram_bot_token.py
 *.pem
 
 # Byte-compiled / optimized / DLL files

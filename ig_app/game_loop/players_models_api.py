@@ -1,8 +1,8 @@
 import requests
 from huggingface_hub import InferenceApi, InferenceClient
 
-from main_setups.setup import HUGGINGFACE_TOKEN
-from telegram_bot_messages import telegram_bot_answers
+from ig_app.main_setups.setup import HUGGINGFACE_TOKEN
+from ig_app.telegram_bot_messages import telegram_bot_answers
 
 
 class InferenceAPIModel:
