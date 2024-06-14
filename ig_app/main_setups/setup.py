@@ -28,8 +28,15 @@ logger.propagate = False  # to avoid doubling in logger output
 if not os.path.exists("main_setups/telegram_bot_token.py"):
     TOKEN = os.environ.get("TOKEN")
     HUGGINGFACE_TOKEN = os.environ.get("HUGGINGFACE_TOKEN")
+    LLAMA_CPP_SERVER_URL = os.environ.get("LLAMA_CPP_SERVER_URL")
+    LLAMA_CPP_SERVER_PORT = os.environ.get("LLAMA_CPP_SERVER_URL")
 else:
-    from main_setups.telegram_bot_token import TOKEN, HUGGINGFACE_TOKEN
+    from main_setups.telegram_bot_token import (
+        TOKEN,
+        HUGGINGFACE_TOKEN,
+        LLAMA_CPP_SERVER_URL,
+        LLAMA_CPP_SERVER_PORT,
+    )
 
 ############ BASEMODEL and Pathes ############
 this_project_path = os.getcwd()
@@ -74,6 +81,8 @@ MESSAGE_WRAPPER = (
 ############ Elements ############
 TOKEN = TOKEN
 HUGGINGFACE_TOKEN = HUGGINGFACE_TOKEN
+LLAMA_CPP_SERVER_URL = LLAMA_CPP_SERVER_URL
+LLAMA_CPP_SERVER_PORT = LLAMA_CPP_SERVER_PORT
 
 IG_bot = AsyncTeleBot(TOKEN)
 # IG_bot.remove_webhook()
